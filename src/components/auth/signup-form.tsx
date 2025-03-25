@@ -182,6 +182,7 @@ export function SignupForm() {
             </div>
             <div className="ml-2">
               <button
+                title="showPassword"
                 type="button"
                 className="text-gray-400 hover:text-gray-600"
                 onClick={() => setShowPassword(!showPassword)}
@@ -208,6 +209,7 @@ export function SignupForm() {
             </div>
             <div className="ml-2">
               <button
+                title="showConfirmPassword"
                 type="button"
                 className="text-gray-400 hover:text-gray-600"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}

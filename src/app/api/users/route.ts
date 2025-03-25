@@ -3,7 +3,28 @@ import { hash } from 'bcrypt';
 import { db } from '@/lib/db';
 import { users, teamInvites } from '@/lib/db/schema';
 import { createId } from '@paralleldrive/cuid2';
+import { desc } from 'drizzle-orm';
 
+// Fetch all users
+export async function GET() {
+  try {
+    // Fetch all users from the database
+    const allUsers = await db.query.users.findMany({
+      orderBy: [desc(users.createdAt)],
+    });
+
+    // Return the users as JSON
+    return NextResponse.json(allUsers);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 }
+    );
+  }
+}
+
+//  Create a new user
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -47,7 +68,7 @@ export async function POST(request: Request) {
 
     // Process team emails if provided
     if (teamEmails) {
-    const emailList: string[] = teamEmails.split('\n').filter((email: string) => email.trim());
+      const emailList: string[] = teamEmails.split('\n').filter((email: string) => email.trim());
 
       if (emailList.length > 0) {
         const invites = emailList.map(email => ({

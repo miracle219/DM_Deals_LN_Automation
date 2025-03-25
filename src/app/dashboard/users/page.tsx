@@ -1,99 +1,154 @@
-import { db } from '@/lib/db';
-import { users } from '@/lib/db/schema';
-import { desc } from 'drizzle-orm';
+"use client";
+
+import { useState, useEffect, ReactNode } from 'react';
 import { Icon } from '@iconify/react';
+import { DataTable } from '@/components/layout/data-table';
+import { User, FormattedUser } from '@/types/user';
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+export default function DashboardUsersPage() {
+  const [users, setUsers] = useState<FormattedUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-export default async function UsersPage() {
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await fetch('/api/users');
 
-  const allUsers = await db.query.users.findMany({
-    orderBy: [desc(users.createdAt)],
-  });
+        if (!response.ok) {
+          throw new Error(`Error fetching users: ${response.status}`);
+        }
 
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Users Management</h2>
-        <button className="flex items-center space-x-2 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">
-          <Icon icon="ion:add-outline" width="18" />
-          <span>Add User</span>
-        </button>
-      </div>
+        const data = await response.json();
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="p-4 border-b flex justify-between items-center">
-          <div>
-            <h3 className="font-medium">All Users</h3>
-            <p className="text-sm text-gray-500">Showing {allUsers.length} users</p>
-          </div>
+        // Format the users data
+        const formattedUsers: FormattedUser[] = data.map((user: User) => ({
+          id: user.id,
+          name: `${user.firstName} ${user.lastName}`,
+          email: user.email,
+          company: user.company || '-',
+          sellingProducts: user.sellingProducts || '-',
+          avgDealSize: user.avgDealSize || '-',
+          createdAt: new Date(user.createdAt).toISOString()
+        }));
 
-          <div className="flex space-x-2">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search users..."
-                className="px-3 py-2 border rounded-md pl-9 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <Icon
-                icon="ion:search-outline"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                width="18"
-              />
-            </div>
+        setUsers(formattedUsers);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        setError('Failed to load users. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    }
 
-            <button className="px-3 py-2 border rounded-md hover:bg-gray-50" title="Filter">
-              <Icon icon="ion:funnel-outline" width="18" />
-            </button>
-          </div>
+    fetchUsers();
+  }, []);
+
+  // Action buttons for the table
+  const actionButtons: ReactNode[] = [
+    <button
+      key="add"
+      className="flex items-center space-x-1 px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50"
+    >
+      <Icon icon="ion:add" />
+      <span>Add User</span>
+    </button>,
+    <button
+      key="export"
+      className="flex items-center space-x-1 px-3 py-1.5 rounded-md border border-gray-300 hover:bg-gray-50"
+    >
+      <Icon icon="ion:download-outline" />
+      <span>Export</span>
+    </button>
+  ];
+
+  // Define columns for the data table
+  const columns = [
+    {
+      id: 'name',
+      header: 'Name',
+      cell: (user: FormattedUser) => (
+        <div className="flex items-center space-x-3">
+          <Avatar className="h-9 w-9">
+            <AvatarFallback className="bg-gray-200 text-gray-700">
+              {user.name.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <span className="font-medium">{user.name}</span>
         </div>
+      )
+    },
+    {
+      id: 'email',
+      header: 'Email',
+      accessorKey: 'email' as keyof FormattedUser,
+    },
+    {
+      id: 'company',
+      header: 'Company',
+      accessorKey: 'company' as keyof FormattedUser,
+    },
+    {
+      id: 'sellingProducts',
+      header: 'Selling Products',
+      accessorKey: 'sellingProducts' as keyof FormattedUser,
+    },
+    {
+      id: 'avgDealSize',
+      header: 'Deal Size',
+      accessorKey: 'avgDealSize' as keyof FormattedUser,
+    },
+    {
+      id: 'createdAt',
+      header: 'Created At',
+      cell: (user: FormattedUser) => {
+        const date = new Date(user.createdAt);
+        return date.toLocaleDateString();
+      },
+    }
+  ];
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Company</TableHead>
-              <TableHead>Selling Products</TableHead>
-              <TableHead>Deal Size</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {allUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.firstName} {user.lastName}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.company || '-'}</TableCell>
-                <TableCell>{user.sellingProducts || '-'}</TableCell>
-                <TableCell>{user.avgDealSize || '-'}</TableCell>
-                <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    <button type="button" className="p-1 hover:text-blue-600" title="View">
-                      <Icon icon="ion:eye-outline" width="18" />
-                    </button>
-                    <button type="button" className="p-1 hover:text-green-600" title="Edit">
-                      <Icon icon="ion:create-outline" width="18" />
-                    </button>
-                    <button type="button" className="p-1 hover:text-red-600" title="Delete">
-                      <Icon icon="ion:trash-outline" width="18" />
-                    </button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
       </div>
-    </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-red-500 text-center">
+          <Icon icon="ion:alert-circle" className="text-4xl mb-2" />
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (users.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64">
+        <Icon icon="ion:people-outline" className="text-4xl mb-2 text-gray-400" />
+        <p className="text-gray-500">No users found</p>
+      </div>
+    );
+  }
+
+    return (
+      <div className='py-20'>
+    <DataTable
+      data={users}
+      columns={columns}
+      title="Users"
+      totalCount={users.length}
+      actions={actionButtons}
+      enableSelection={true}
+      enableHover={true}
+      className="shadow-sm"
+            />
+            </div>
   );
 }
