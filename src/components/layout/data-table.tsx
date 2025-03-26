@@ -89,20 +89,29 @@ export function DataTable<T extends { id: string }>({
       </div>
 
       {/* Table */}
-      <div className={`border border-1 rounded-lg overflow-hidden ${className}`}>
+      <div className={`border border-gray-300 rounded-lg overflow-hidden ${className}`}>
         <Table>
           <TableHeader>
             <TableRow>
               {enableSelection && (
                 <TableHead className="w-[60px]">
-                  <div className="flex justify-center items-center">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded-full border-gray-300 accent-black text-gray-900 focus:ring-gray-500"
-                      checked={selectAll}
-                      onChange={handleSelectAll}
-                    />
-                  </div>
+                 <div className="flex justify-center items-center">
+  <label className="inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="hidden peer"
+      checked={selectAll}
+      onChange={handleSelectAll}
+    />
+    <span className="w-5 h-5 border border-black rounded-full peer-checked:bg-black peer-checked:border-black relative">
+      <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <span className="w-2.5 h-2.5 bg-white rounded-full opacity-0 peer-checked:opacity-100"></span>
+      </span>
+    </span>
+  </label>
+</div>
+
+
                 </TableHead>
               )}
 
@@ -125,13 +134,21 @@ export function DataTable<T extends { id: string }>({
                 {enableSelection && (
                   <TableCell className="">
                     <div className="flex justify-center items-center">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 rounded-full border-gray-300 text-gray-900 accent-black focus:ring-gray-500"
-                        checked={isRowSelected(row.id)}
-                        onChange={() => handleSelectRow(row.id)}
-                      />
-                    </div>
+  <label className="inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="hidden peer"
+      checked={isRowSelected(row.id)}
+      onChange={() => handleSelectRow(row.id)}
+    />
+    <span className="w-5 h-5 border border-black rounded-full peer-checked:bg-black peer-checked:border-black relative">
+      <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+        <span className="w-2.5 h-2.5 bg-white rounded-full opacity-0 peer-checked:opacity-100"></span>
+      </span>
+    </span>
+  </label>
+</div>
+
                   </TableCell>
                 )}
 

@@ -16,13 +16,13 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50 px-8">
+    <div className="flex min-h-screen bg-gray-50 ">
       {/* Sidebar */}
-      <Sidebar className='h-[700px] pt-8' />
+      <Sidebar className='h-[700px] pt-8 border-r' />
 
       {/* Main Content */}
-      <main className="flex-1">
-        <div>
+      <main className="flex-1 px-8">
+        <div className="">
           {children}
         </div>
       </main>

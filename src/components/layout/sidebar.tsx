@@ -42,17 +42,17 @@ export function Sidebar({ className }: SidebarProps) {
     {
       name: 'Target',
       href: '/dashboard/targets',
-      icon: 'ion:people-outline',
+      icon: 'ion:person-circle-outline',
     },
     {
       name: 'Open',
       href: '/dashboard/open',
-      icon: 'ion:chatbubble-outline',
+      icon: 'ion:chatbox-ellipses-outline',
     },
     {
       name: 'Closed',
       href: '/dashboard/closed',
-      icon: 'ion:checkmark-circle-outline',
+      icon: 'ion:chatbox-outline',
     },
     {
       name: 'Archived',
@@ -78,7 +78,7 @@ export function Sidebar({ className }: SidebarProps) {
 
   return (
     <aside
-      className={`${collapsed ? 'w-16' : 'w-64'} h-screen flex flex-col bg-white transition-all duration-300 ${className}`}
+      className={`${collapsed ? 'w-16' : 'w-72'} h-screen flex flex-col bg-white transition-all duration-300 md:pl-3 ${className}`}
     >
       {/* Logo and toggle button area */}
       <div className={`p-4 flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
@@ -112,7 +112,7 @@ export function Sidebar({ className }: SidebarProps) {
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-2 py-2">
+      <nav className="flex-1 overflow-y-auto px-4 py-2">
         <ul className="space-y-1">
           <TooltipProvider>
             {navItems.map((item) => (
@@ -140,8 +140,8 @@ export function Sidebar({ className }: SidebarProps) {
                     href={item.href}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-md transition-colors ${
                       isActive(item.href)
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-gray-100 font-bold'
+                        : ' hover:bg-gray-100'
                     }`}
                   >
                     <Icon icon={item.icon} width="20" className="flex-shrink-0" />
