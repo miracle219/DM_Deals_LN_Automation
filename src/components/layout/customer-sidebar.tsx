@@ -166,22 +166,8 @@ export function CustomerSidebar({ className }: CustomerSidebarProps) {
 
         {/* Add Target button - with tooltip when collapsed */}
         <div className="py-2 border-t border-gray-100 mt-4">
-          <TooltipProvider>
-            {collapsed ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    href="/dashboard/target/add"
-                    className="flex items-center justify-center w-full p-2 bg-black text-white rounded-md hover:bg-gray-800"
-                  >
-                    <Icon icon="ion:add-circle-outline" width="20" />
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={10}>
-                  Add Target
-                </TooltipContent>
-              </Tooltip>
-            ) : (
+
+            {!collapsed && (
               <Link
                 href="/dashboard/target/add"
                 className="flex items-center justify-center space-x-2 w-full p-2 bg-black text-white rounded-md hover:bg-gray-800"
@@ -190,11 +176,11 @@ export function CustomerSidebar({ className }: CustomerSidebarProps) {
                 <span>Add Target</span>
               </Link>
             )}
-          </TooltipProvider>
+
         </div>
       </nav>
 
-      {/* User profile area - fixed at bottom */}
+      {/* User profile area */}
       {session?.user && (
         <div className="p-2 border-t border-gray-100 relative" ref={profileMenuRef}>
           <TooltipProvider>

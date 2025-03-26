@@ -80,26 +80,41 @@ export const authOptions: AuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   pages: {
     signIn: "/login", // Default sign in page
+    error: "/login", // Error page
   },
   callbacks: {
     async session({ session, token }) {
-      if (session.user) {
+      if (token && session.user) {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.company = token.company;
         session.user.referralSource = token.referralSource;
         session.user.sellingProducts = token.sellingProducts;
         session.user.avgDealSize = token.avgDealSize;
+
+        // Verify user still exists in database
+        try {
+          const user = await db.query.users.findFirst({
+            where: eq(users.id, token.id),
+          });
+
+          // If user no longer exists, invalidate the session
+          if (!user) {
+            session.user = null as any; // Force session invalidation
+            throw new Error("User no longer exists");
+          }
+        } catch (error) {
+          console.error("Error verifying user existence:", error);
+        }
       }
       return session;
     },
     async jwt({ token, user, trigger, session }) {
-
       if (user) {
-
         const customUser = user as {
           id: string;
           role: string;

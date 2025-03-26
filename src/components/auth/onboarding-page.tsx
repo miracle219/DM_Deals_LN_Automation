@@ -71,82 +71,83 @@ export default function OnboardingPage() {
 
 
   useEffect(() => {
+    // Redirect unauthenticated users to login
     if (status === "unauthenticated") {
       router.push("/login");
-    }
-  }, [status, router]);
-
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!session || !session.user || !session.user.id) {
-      toast.error("You must be logged in to complete onboarding");
       return;
     }
 
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch("/api/users/onboarding", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: session.user.id,
-          role: values.role,
-          referralSource: values.referralSource,
-          company: values.company,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Failed to update profile");
-      }
-
-      // Update session
-await update({
-  ...session,
-  user: {
-    ...session.user,
-    role: values.role,
-    referralSource: values.referralSource,
-    company: values.company
-  },
-});
-
-
-
-      toast.success("Profile updated successfully", {
-        description: "Redirecting to your dashboard...",
-        closeButton: true,
-      });
-
-setTimeout(() => {
-  router.push("/dashboard");
-}, 500);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      toast.error("Failed to update profile", {
-        description: error.message || "Please try again",
-        closeButton: true,
-      });
-    } finally {
-      setIsSubmitting(false);
+    // Redirect admin users to their dashboard
+    if (status === "authenticated" && session.user.role === "ADMIN") {
+      router.push("/admin/dashboard");
     }
+  }, [status, router, session]);
+
+async function onSubmit(values: z.infer<typeof formSchema>) {
+  if (!session || !session.user || !session.user.id) {
+    toast.error("You must be logged in to complete onboarding");
+    return;
   }
 
-  // Show loading state while checking authentication
-  if (status === "loading") {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900 mb-4"></div>
-          <p className="text-gray-600">Loading your profile...</p>
-        </div>
-      </div>
-    );
+  setIsSubmitting(true);
+
+  try {
+    const response = await fetch("/api/users/onboarding", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: session.user.id,
+        role: values.role,
+        referralSource: values.referralSource,
+        company: values.company,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update profile");
+    }
+
+    // Update session with new values
+    await update({
+      ...session,
+      user: {
+        ...session.user,
+        role: values.role,
+        referralSource: values.referralSource,
+        company: values.company
+      },
+    });
+
+    toast.success("Profile updated successfully", {
+      description: "Redirecting to your dashboard...",
+      closeButton: true,
+    });
+
+    router.push("/dashboard");
+
+
+    setTimeout(() => {
+      // If we're still on the same page after attempting navigation, try again with refresh
+      if (window.location.pathname.includes('/onboarding')) {
+        router.refresh();
+        router.push("/dashboard");
+      }
+    }, 300);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    toast.error("Failed to update profile", {
+      description: error.message || "Please try again",
+      closeButton: true,
+    });
+  } finally {
+    setIsSubmitting(false);
   }
+}
+
 
   // Don't render the form if not authenticated
   if (status === "unauthenticated") {
