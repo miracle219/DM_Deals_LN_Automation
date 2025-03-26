@@ -8,18 +8,16 @@ import { useSession, signOut } from 'next-auth/react';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-interface SidebarProps {
+interface CustomerSidebarProps {
   className?: string;
 }
 
-export function Sidebar({ className }: SidebarProps) {
+export function CustomerSidebar({ className }: CustomerSidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [collapsed, setCollapsed] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
-
-  const isAdmin = session?.user?.role === 'ADMIN';
 
   // Set initial collapsed state based on screen size
   useEffect(() => {
@@ -56,7 +54,7 @@ export function Sidebar({ className }: SidebarProps) {
   };
 
   // Customer menu items
-  const customerItems = [
+  const navItems = [
     {
       name: 'Target',
       href: '/dashboard/target',
@@ -89,25 +87,13 @@ export function Sidebar({ className }: SidebarProps) {
     }
   ];
 
-  // Admin menu items
-  const adminItems = [
-    {
-      name: 'Users',
-      href: '/admin/dashboard/users',
-      icon: 'ion:people-outline',
-    }
-  ];
-
-  // Select the appropriate items based on user role
-  const navItems = isAdmin ? adminItems : customerItems;
-
   return (
     <aside
       className={`${collapsed ? 'w-16' : 'w-72'} h-screen flex flex-col bg-white transition-all duration-300 md:pl-3 ${className}`}
     >
       {/* Logo and toggle button area */}
       <div className={`p-4 flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
-        <Link href={isAdmin ? "/admin/dashboard" : "/dashboard"} className="flex items-center space-x-2">
+        <Link href="/dashboard" className="flex items-center space-x-2">
           <div className="min-w-[24px] flex items-center justify-center">
             <Icon icon="ion:file-tray-full-outline" width="24" />
           </div>
@@ -177,22 +163,38 @@ export function Sidebar({ className }: SidebarProps) {
             ))}
           </TooltipProvider>
         </ul>
-              {/* Action button for customers */}
-      {!isAdmin && !collapsed && (
-        <div className="py-2 border-t border-gray-100">
-          <Link
-            href="/dashboard/target/add"
-            className="flex items-center justify-center space-x-2 w-full p-2 bg-black text-white rounded-md hover:bg-gray-800"
-          >
-            <Icon icon="ion:add-circle-outline" width="20" />
-            <span>Add Target</span>
-          </Link>
+
+        {/* Add Target button - with tooltip when collapsed */}
+        <div className="py-2 border-t border-gray-100 mt-4">
+          <TooltipProvider>
+            {collapsed ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href="/dashboard/target/add"
+                    className="flex items-center justify-center w-full p-2 bg-black text-white rounded-md hover:bg-gray-800"
+                  >
+                    <Icon icon="ion:add-circle-outline" width="20" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={10}>
+                  Add Target
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Link
+                href="/dashboard/target/add"
+                className="flex items-center justify-center space-x-2 w-full p-2 bg-black text-white rounded-md hover:bg-gray-800"
+              >
+                <Icon icon="ion:add-circle-outline" width="20" />
+                <span>Add Target</span>
+              </Link>
+            )}
+          </TooltipProvider>
         </div>
-      )}
       </nav>
 
-
-
+      {/* User profile area - fixed at bottom */}
       {session?.user && (
         <div className="p-2 border-t border-gray-100 relative" ref={profileMenuRef}>
           <TooltipProvider>

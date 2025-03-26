@@ -95,18 +95,25 @@ export function DataTable<T extends { id: string }>({
             <TableRow>
               {enableSelection && (
                 <TableHead className="w-[60px]">
-                 <div className="flex justify-center items-center">
+<div className="flex justify-center items-center">
   <label className="inline-flex items-center cursor-pointer">
     <input
       type="checkbox"
-      className="hidden peer"
+      className="hidden"
       checked={selectAll}
       onChange={handleSelectAll}
     />
-    <span className="w-5 h-5 border border-black rounded-full peer-checked:bg-black peer-checked:border-black relative">
-      <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-        <span className="w-2.5 h-2.5 bg-white rounded-full opacity-0 peer-checked:opacity-100"></span>
-      </span>
+    <span className={`w-5 h-5 border border-black rounded-full relative flex items-center justify-center ${selectAll ? 'bg-black border-black' : selectedRows.length > 0 && selectedRows.length < data.length ? 'bg-black border-black' : ''}`}>
+      {selectAll ? (
+        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      ) : selectedRows.length > 0 && selectedRows.length < data.length ? (
+        <div className="flex flex-col items-center">
+          <div className="w-2 h-0.5 bg-white mb-0.5"></div>
+          <div className="w-1.5 h-0.5 bg-white"></div>
+        </div>
+      ) : null}
     </span>
   </label>
 </div>
@@ -133,18 +140,20 @@ export function DataTable<T extends { id: string }>({
               >
                 {enableSelection && (
                   <TableCell className="">
-                    <div className="flex justify-center items-center">
+<div className="flex justify-center items-center">
   <label className="inline-flex items-center cursor-pointer">
     <input
       type="checkbox"
-      className="hidden peer"
+      className="hidden"
       checked={isRowSelected(row.id)}
       onChange={() => handleSelectRow(row.id)}
     />
-    <span className="w-5 h-5 border border-black rounded-full peer-checked:bg-black peer-checked:border-black relative">
-      <span className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-        <span className="w-2.5 h-2.5 bg-white rounded-full opacity-0 peer-checked:opacity-100"></span>
-      </span>
+    <span className={`w-5 h-5 border border-black rounded-full relative flex items-center justify-center ${isRowSelected(row.id) ? 'bg-black border-black' : ''}`}>
+      {isRowSelected(row.id) && (
+        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      )}
     </span>
   </label>
 </div>

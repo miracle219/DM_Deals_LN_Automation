@@ -2,7 +2,7 @@ import { pgTable, text, timestamp, boolean, integer, jsonb, pgEnum } from 'drizz
 import { createId } from '@paralleldrive/cuid2';
 
 // Enums
-export const userRoleEnum = pgEnum('user_role', ['B2B_FOUNDER', 'B2B_SALESPERSON', 'B2B_CREATOR', 'B2B_MARKETER', 'ENTREPRENEUR', 'PROFESSIONAL', 'JOB_SEEKER', 'STUDENT', 'OTHER']);
+export const userRoleEnum = pgEnum('user_role', ['ADMIN', 'CUSTOMER', 'B2B_FOUNDER', 'B2B_SALESPERSON', 'B2B_CREATOR', 'B2B_MARKETER', 'ENTREPRENEUR', 'PROFESSIONAL', 'JOB_SEEKER', 'STUDENT', 'OTHER']);
 export const referralSourceEnum = pgEnum('referral_source', ['FRIEND_COWORKER', 'WEB_SEARCH', 'LINKEDIN', 'TWITTER_X', 'INSTAGRAM', 'YOUTUBE', 'OTHER']);
 export const conversationStatusEnum = pgEnum('conversation_status', ['UNREAD', 'TO_NURTURE', 'WARM', 'CLOSED', 'IGNORED']);
 
@@ -13,10 +13,10 @@ export const users = pgTable('users', {
   lastName: text('last_name').notNull(),
   email: text('email').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
+  role: userRoleEnum('role').default('CUSTOMER').notNull(),
   company: text('company'),
   sellingProducts: text('selling_products'),
   avgDealSize: text('avg_deal_size'),
-  role: userRoleEnum('role'),
   referralSource: referralSourceEnum('referral_source'),
   linkedinAccessToken: text('linkedin_access_token'),
   linkedinRefreshToken: text('linkedin_refresh_token'),

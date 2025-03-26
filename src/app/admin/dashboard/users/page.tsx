@@ -6,7 +6,7 @@ import { DataTable } from '@/components/layout/data-table';
 import { User, FormattedUser } from '@/types/user';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-export default function DashboardUsersPage() {
+export default function AdminDashboardUsersPage() {
   const [users, setUsers] = useState<FormattedUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +27,7 @@ export default function DashboardUsersPage() {
           id: user.id,
           name: `${user.firstName} ${user.lastName}`,
           email: user.email,
+          role: user.role || 'CUSTOMER',
           company: user.company || '-',
           sellingProducts: user.sellingProducts || '-',
           avgDealSize: user.avgDealSize || '-',
@@ -85,19 +86,22 @@ export default function DashboardUsersPage() {
       accessorKey: 'email' as keyof FormattedUser,
     },
     {
+      id: 'role',
+      header: 'Role',
+      cell: (user: FormattedUser) => (
+        <span className={`px-2 py-1 rounded-full text-xs ${
+          user.role === 'ADMIN'
+            ? 'bg-purple-100 text-purple-800'
+            : 'bg-blue-100 text-blue-800'
+        }`}>
+          {user.role}
+        </span>
+      ),
+    },
+    {
       id: 'company',
       header: 'Company',
       accessorKey: 'company' as keyof FormattedUser,
-    },
-    {
-      id: 'sellingProducts',
-      header: 'Selling Products',
-      accessorKey: 'sellingProducts' as keyof FormattedUser,
-    },
-    {
-      id: 'avgDealSize',
-      header: 'Deal Size',
-      accessorKey: 'avgDealSize' as keyof FormattedUser,
     },
     {
       id: 'createdAt',
@@ -137,18 +141,18 @@ export default function DashboardUsersPage() {
     );
   }
 
-    return (
-      <div className='py-20'>
-    <DataTable
-      data={users}
-      columns={columns}
-      title="Users"
-      totalCount={users.length}
-      actions={actionButtons}
-      enableSelection={true}
-      enableHover={true}
-      className="shadow-sm"
-            />
-            </div>
+  return (
+    <div className='py-24'>
+      <DataTable
+        data={users}
+        columns={columns}
+        title="Users"
+        totalCount={users.length}
+        actions={actionButtons}
+        enableSelection={true}
+        enableHover={true}
+        className="shadow-sm"
+      />
+    </div>
   );
 }
