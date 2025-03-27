@@ -4,10 +4,22 @@ import { db } from '@/lib/db';
 import { users, teamInvites } from '@/lib/db/schema';
 import { createId } from '@paralleldrive/cuid2';
 import { desc } from 'drizzle-orm';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../auth/[...nextauth]/route';
 
-// Fetch all users
+// Fetch all users (admin only)
 export async function GET() {
   try {
+    const session = await getServerSession(authOptions);
+
+    // Check if user is admin
+    if (!session || session.user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 403 }
+      );
+    }
+
     // Fetch all users from the database
     const allUsers = await db.query.users.findMany({
       orderBy: [desc(users.createdAt)],
@@ -24,7 +36,7 @@ export async function GET() {
   }
 }
 
-//  Create a new user
+// Create a new user (customer)
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -60,6 +72,7 @@ export async function POST(request: Request) {
       lastName,
       email,
       passwordHash: hashedPassword,
+      role: 'CUSTOMER',
       sellingProducts,
       avgDealSize,
       createdAt: new Date(),
@@ -91,6 +104,7 @@ export async function POST(request: Request) {
           email: newUser.email,
           firstName: newUser.firstName,
           lastName: newUser.lastName,
+          role: newUser.role
         }
       },
       { status: 201 }

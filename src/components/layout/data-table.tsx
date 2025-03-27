@@ -89,20 +89,36 @@ export function DataTable<T extends { id: string }>({
       </div>
 
       {/* Table */}
-      <div className={`border border-1 rounded-lg overflow-hidden ${className}`}>
+      <div className={`border border-gray-300 rounded-lg overflow-hidden ${className}`}>
         <Table>
           <TableHeader>
             <TableRow>
               {enableSelection && (
                 <TableHead className="w-[60px]">
-                  <div className="flex justify-center items-center">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded-full border-gray-300 accent-black text-gray-900 focus:ring-gray-500"
-                      checked={selectAll}
-                      onChange={handleSelectAll}
-                    />
-                  </div>
+<div className="flex justify-center items-center">
+  <label className="inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="hidden"
+      checked={selectAll}
+      onChange={handleSelectAll}
+    />
+    <span className={`w-5 h-5 border border-black rounded-full relative flex items-center justify-center ${selectAll ? 'bg-black border-black' : selectedRows.length > 0 && selectedRows.length < data.length ? 'bg-black border-black' : ''}`}>
+      {selectAll ? (
+        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      ) : selectedRows.length > 0 && selectedRows.length < data.length ? (
+        <div className="flex flex-col items-center">
+          <div className="w-2 h-0.5 bg-white mb-0.5"></div>
+          <div className="w-1.5 h-0.5 bg-white"></div>
+        </div>
+      ) : null}
+    </span>
+  </label>
+</div>
+
+
                 </TableHead>
               )}
 
@@ -124,14 +140,24 @@ export function DataTable<T extends { id: string }>({
               >
                 {enableSelection && (
                   <TableCell className="">
-                    <div className="flex justify-center items-center">
-                      <input
-                        type="checkbox"
-                        className="h-4 w-4 rounded-full border-gray-300 text-gray-900 accent-black focus:ring-gray-500"
-                        checked={isRowSelected(row.id)}
-                        onChange={() => handleSelectRow(row.id)}
-                      />
-                    </div>
+<div className="flex justify-center items-center">
+  <label className="inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      className="hidden"
+      checked={isRowSelected(row.id)}
+      onChange={() => handleSelectRow(row.id)}
+    />
+    <span className={`w-5 h-5 border border-black rounded-full relative flex items-center justify-center ${isRowSelected(row.id) ? 'bg-black border-black' : ''}`}>
+      {isRowSelected(row.id) && (
+        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      )}
+    </span>
+  </label>
+</div>
+
                   </TableCell>
                 )}
 

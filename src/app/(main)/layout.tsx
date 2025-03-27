@@ -11,8 +11,9 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   const [scrolled, setScrolled] = useState(false);
-  const { status } = useSession();
+  const { status, data: session } = useSession();
   const isAuthenticated = status === 'authenticated';
+  const isAdmin = session?.user?.role === 'ADMIN';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,7 +73,7 @@ export default function ClientLayout({
           <div className="grid grid-cols-1 items-center justify-between">
             {isAuthenticated ? (
               <Link
-                href="/dashboard"
+                href={isAdmin ? "/admin/dashboard" : "/dashboard"}
                 className="flex items-center space-x-2 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
               >
                 <span>Go to Dashboard</span>

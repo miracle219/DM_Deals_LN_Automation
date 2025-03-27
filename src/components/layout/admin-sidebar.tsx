@@ -8,18 +8,16 @@ import { useSession, signOut } from 'next-auth/react';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-interface SidebarProps {
+interface AdminSidebarProps {
   className?: string;
 }
 
-export function Sidebar({ className }: SidebarProps) {
+export function AdminSidebar({ className }: AdminSidebarProps) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [collapsed, setCollapsed] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
-
-  const isAdmin = session?.user?.role === 'ADMIN';
 
   // Set initial collapsed state based on screen size
   useEffect(() => {
@@ -55,42 +53,8 @@ export function Sidebar({ className }: SidebarProps) {
     return pathname === path || pathname?.startsWith(`${path}/`);
   };
 
-  // Customer menu items
-  const customerItems = [
-    {
-      name: 'Target',
-      href: '/dashboard/target',
-      icon: 'ion:person-circle-outline',
-    },
-    {
-      name: 'Open',
-      href: '/dashboard/open',
-      icon: 'ion:chatbox-ellipses-outline',
-    },
-    {
-      name: 'Closed',
-      href: '/dashboard/closed',
-      icon: 'ion:chatbox-outline',
-    },
-    {
-      name: 'Archived',
-      href: '/dashboard/archived',
-      icon: 'ion:archive-outline',
-    },
-    {
-      name: 'Education',
-      href: '/dashboard/education',
-      icon: 'ion:book-outline',
-    },
-    {
-      name: 'Support',
-      href: '/dashboard/support',
-      icon: 'ion:help-buoy-outline',
-    }
-  ];
-
   // Admin menu items
-  const adminItems = [
+  const navItems = [
     {
       name: 'Users',
       href: '/admin/dashboard/users',
@@ -98,20 +62,17 @@ export function Sidebar({ className }: SidebarProps) {
     }
   ];
 
-  // Select the appropriate items based on user role
-  const navItems = isAdmin ? adminItems : customerItems;
-
   return (
     <aside
       className={`${collapsed ? 'w-16' : 'w-72'} h-screen flex flex-col bg-white transition-all duration-300 md:pl-3 ${className}`}
     >
       {/* Logo and toggle button area */}
       <div className={`p-4 flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
-        <Link href={isAdmin ? "/admin/dashboard" : "/dashboard"} className="flex items-center space-x-2">
+        <Link href="/admin/dashboard" className="flex items-center space-x-2">
           <div className="min-w-[24px] flex items-center justify-center">
             <Icon icon="ion:file-tray-full-outline" width="24" />
           </div>
-          {!collapsed && <span className="font-bold text-lg whitespace-nowrap">DM Deals</span>}
+          {!collapsed && <span className="font-bold text-lg whitespace-nowrap">DM Deals Admin</span>}
         </Link>
 
         {!collapsed && (
@@ -177,22 +138,9 @@ export function Sidebar({ className }: SidebarProps) {
             ))}
           </TooltipProvider>
         </ul>
-              {/* Action button for customers */}
-      {!isAdmin && !collapsed && (
-        <div className="py-2 border-t border-gray-100">
-          <Link
-            href="/dashboard/target/add"
-            className="flex items-center justify-center space-x-2 w-full p-2 bg-black text-white rounded-md hover:bg-gray-800"
-          >
-            <Icon icon="ion:add-circle-outline" width="20" />
-            <span>Add Target</span>
-          </Link>
-        </div>
-      )}
       </nav>
 
-
-
+      {/* User profile area - fixed at bottom */}
       {session?.user && (
         <div className="p-2 border-t border-gray-100 relative" ref={profileMenuRef}>
           <TooltipProvider>
@@ -211,7 +159,7 @@ export function Sidebar({ className }: SidebarProps) {
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="right" sideOffset={10}>
-                  {session.user.name || 'User'}
+                  {session.user.name || 'Admin User'}
                 </TooltipContent>
               </Tooltip>
             ) : (
@@ -226,7 +174,7 @@ export function Sidebar({ className }: SidebarProps) {
                 </Avatar>
                 <div className="flex-1 min-w-0 text-left">
                   <p className="text-sm font-medium text-gray-900 truncate">
-                    {session.user.name || 'User'}
+                    {session.user.name || 'Admin User'}
                   </p>
                   <p className="text-xs text-gray-500 truncate">
                     {session.user.email || ''}
