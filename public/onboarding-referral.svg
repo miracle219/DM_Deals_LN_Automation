@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="160" viewBox="0 0 200 160">
+  <!-- Person 1 -->
+  <circle cx="60" cy="60" r="20" fill="#D1D5DB" />
+  <rect x="45" y="85" width="30" height="45" rx="2" fill="#D1D5DB" />
+  <rect x="35" y="90" width="10" height="25" rx="2" fill="#D1D5DB" />
+  <rect x="75" y="90" width="10" height="25" rx="2" fill="#D1D5DB" />
+
+  <!-- Person 2 -->
+  <circle cx="140" cy="60" r="20" fill="#D1D5DB" />
+  <rect x="125" y="85" width="30" height="45" rx="2" fill="#D1D5DB" />
+  <rect x="115" y="90" width="10" height="25" rx="2" fill="#D1D5DB" />
+  <rect x="155" y="90" width="10" height="25" rx="2" fill="#D1D5DB" />
+
+  <!-- Connection lines -->
+  <path d="M80,60 L120,60" stroke="#F9FAFB" stroke-width="3" stroke-dasharray="5,5" />
+  <path d="M80,70 Q100,100 120,70" stroke="#F9FAFB" stroke-width="3" />
+
+  <!-- Speech bubble -->
+  <path d="M100,30 L90,45 L110,45 Z" fill="#F9FAFB" />
+  <rect x="80" y="10" width="40" height="20" rx="10" fill="#F9FAFB" />
+</svg>

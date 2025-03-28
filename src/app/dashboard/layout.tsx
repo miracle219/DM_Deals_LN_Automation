@@ -1,9 +1,8 @@
-// src/app/dashboard/layout.tsx
 import { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../api/auth/[...nextauth]/route';
 import { CustomerSidebar } from '@/components/layout/customer-sidebar';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 
 export default async function DashboardLayout({
   children,
@@ -13,23 +12,23 @@ export default async function DashboardLayout({
   const session = await getServerSession(authOptions);
 
   // Redirect if not authenticated
-  if (!session) {
+  if (!session || !session.user) {
     redirect('/login');
   }
 
-  // Redirect admins to their dashboard
-  if (session.user.role === 'ADMIN') {
+  // Redirect admins to their dashboard - with null check
+  if (session.user?.role === 'ADMIN') {
     redirect('/admin/dashboard');
   }
 
-  // Check if onboarding is completed by verifying all required fields are present
+  // Check if onboarding is completed by verifying all required fields are present - with null checks
   const hasCompletedOnboarding =
     // Role should be defined and is not default CUSTOMER
-    (session.user.role && session.user.role !== "CUSTOMER") &&
+    (session.user?.role && session.user.role !== "CUSTOMER") &&
     // Referral source should be defined
-    session.user.referralSource &&
+    !!session.user?.referralSource &&
     // Company should be defined
-    session.user.company;
+    !!session.user?.company;
 
   // Redirect to onboarding if needed
   if (!hasCompletedOnboarding) {

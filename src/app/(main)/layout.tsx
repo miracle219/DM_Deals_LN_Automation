@@ -41,7 +41,7 @@ export default function ClientLayout({
       {/* Header Section */}
       <header className={`py-4 sticky top-4 z-50 transition-all duration-300 ${scrolled ? 'bg-white/70 backdrop-blur-md border mx-4 rounded-lg' : ''}`}>
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2 cursor-pointer">
             <Icon icon="ion:file-tray-full-outline" width="24" />
             <span className="text-xl font-bold">DM Demand</span>
           </Link>
