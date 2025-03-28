@@ -72,7 +72,7 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
           <div className="min-w-[24px] flex items-center justify-center">
             <Icon icon="ion:file-tray-full-outline" width="24" />
           </div>
-          {!collapsed && <span className="font-bold text-lg whitespace-nowrap">DM Deals Admin</span>}
+          {!collapsed && <span className="font-bold text-lg whitespace-nowrap">DM Demand</span>}
         </Link>
 
         {!collapsed && (

@@ -18,7 +18,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "DM Deals - LinkedIn Optimization Tool",
+  title: "DM Demand - LinkedIn Optimization Tool",
   description: "Optimize your LinkedIn account with AI-powered insights and recommendations.",
 };
 
