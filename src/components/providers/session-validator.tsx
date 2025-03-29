@@ -12,6 +12,7 @@ export default function SessionValidator({ children }: { children: React.ReactNo
 
   useEffect(() => {
     const validateSession = async () => {
+      // Only validate if we're authenticated and have a session with a user ID
       if (status === 'authenticated' && session?.user?.id) {
         try {
           const response = await fetch('/api/auth/validate');
@@ -36,12 +37,20 @@ export default function SessionValidator({ children }: { children: React.ReactNo
       setIsValidating(false);
     };
 
-    validateSession();
+    // Only run validation if the status is authenticated or loading
+    // Skip validation when unauthenticated to avoid unnecessary API calls
+    if (status !== 'unauthenticated') {
+      validateSession();
+    } else {
+      setIsValidating(false);
+    }
   }, [session, status, router]);
 
 
   if (isValidating) {
-    return null;
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-black"></div>
+    </div>;
   }
 
   return <>{children}</>;

@@ -1,4 +1,5 @@
 "use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Icon } from "@iconify/react";
@@ -7,6 +8,7 @@ import { motion } from 'framer-motion';
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeQuestion, setActiveQuestion] = useState(2);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,11 +40,55 @@ export default function LandingPage() {
     }
   };
 
+  const floatAnimation = {
+    y: [0, -10, 0],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      repeatType: "reverse"
+    }
+  };
+
+  const toggleQuestion = (index) => {
+    if (activeQuestion === index) {
+      setActiveQuestion(null);
+    } else {
+      setActiveQuestion(index);
+    }
+  };
+
+  const faqItems = [
+    {
+      question: "How does this work with LinkedIn's own messaging features?",
+      answer: "We integrate directly with LinkedIn's messaging API, enhancing its native capabilities while maintaining compliance. Our tool adds sentiment analysis, prioritization, and CRM integration features not available in LinkedIn's standard messaging."
+    },
+    {
+      question: "What kind of LI activity can you automate for me?",
+      answer: "We help you manage conversations more efficiently, but we don't automate posting or messaging. We provide insights, prioritize high-value conversations, and help you track relationships, but all messaging remains authentic and controlled by you."
+    },
+    {
+      question: "How do I make the most out of DM Demand?",
+      answer: "We find our power users are often posting consistently on their LinkedIn, a mix of both video and static posts, as well as engaging with posts in their niche. Access our education materials for free inside the platform."
+    },
+    {
+      question: "Is it safe to use DM Demand with my LinkedIn account and data?",
+      answer: "Absolutely. We use OAuth for secure authentication and never store your LinkedIn credentials. We comply with LinkedIn's terms of service and maintain strict data privacy practices with encryption and regular security audits."
+    },
+    {
+      question: "Does DM Demand violate LinkedIn Terms of Service?",
+      answer: "No, DM Demand is built to be fully compliant with LinkedIn's Terms of Service and developer policies. We access data only through approved API channels and with proper user authorization."
+    },
+    {
+      question: "How long does onboarding take?",
+      answer: "Most users are up and running within 10-15 minutes. The process includes connecting your LinkedIn account, setting up any CRM integrations, and a quick walkthrough of the platform features."
+    }
+  ];
+
   return (
     <div className="min-h-screen mx-auto flex flex-col">
 
       {/* Hero Section */}
-      <section className="flex-grow py-12 md:py-20 -mt-16 pt-24">
+      <section className="flex-grow py-12 md:py-20 -mt-16 pt-24 relative">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           <motion.div
             className="md:w-1/2 mb-10 md:mb-0"
@@ -51,165 +97,97 @@ export default function LandingPage() {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Scale 1:1 DMs on LI, X and IG. Close more deals syncing DMs to your CRM
+              Create More Pipeline With LinkedIn DMs
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8">
-              Generate more leads and meetings by relationship building in your Direct Messages. Close more effectively by pushing rich DM Conversation Data automatically to your CRM.
+              Sentiment Analysis tools manage your ongoing DMs. New profiles are recommended to message based on your ICP and engagement activity to increase your amount of qualified DMs.
             </p>
-            <div>
+            <div className="flex items-center space-x-4">
               <Link
                 href="/signup"
                 className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 inline-flex items-center transition-all duration-300 ease-in-out"
               >
                 <Icon icon="ion:flash-outline" className="mr-2" />
-                Get started for free
+                Get Started For Free
               </Link>
             </div>
           </motion.div>
           <motion.div
-            className="md:w-1/2"
+            className="md:w-1/2 flex justify-center items-center relative"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <Image
-              src="/social-life-bro.png"
-              alt="Social messaging illustration"
-              width={600}
-              height={500}
-              className="max-w-full h-auto -mt-8 -ml-6"
+              src="/hero.png"
+              alt="Person using laptop illustration"
+              width={500}
+              height={400}
+              className="max-w-full h-auto object-contain"
               priority
+              style={{ maxHeight: '400px' }}
             />
           </motion.div>
         </div>
-      </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <motion.h2
-            className="text-3xl font-bold mb-8"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, amount: 0.2 }}
-            variants={fadeInUp}
-          >
-            DM Deals integrates with:
-          </motion.h2>
-
-          <div className="flex justify-start mb-6">
-            <button className="flex items-center px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100 transition-all duration-300">
-              <Icon icon="ion:add-circle-outline" className="mr-2" />
-              Suggest a new integration
-            </button>
-          </div>
-
+        {/* LinkedIn Badges */}
+        <motion.div
+          className="absolute top-18 -left-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          whileHover={{ scale: 1.05 }}
+        >
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, amount: 0.1 }}
+            className="flex items-center space-x-2 bg-black/60 shadow-md px-3 py-2 rounded-full"
+            animate={floatAnimation}
           >
-            {/* LinkedIn */}
-            <motion.div
-              variants={fadeInUp}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-              className="flex bg-white p-4 rounded-lg hover:shadow-md transition-all duration-300"
-            >
-              <div className="mr-4">
-                <Image src="/linkedin.png" alt="LinkedIn" width={64} height={64} />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-2">LinkedIn</h3>
-                <p className="text-gray-600">
-                  Digibyte ankr hedera holo arweave revain. Quant livepeer PancakeSwap telcoin livepeer aave kusama hedera aave. Serum shiba-inu.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* SalesForce */}
-            <motion.div
-              className="flex bg-white p-4 rounded-lg hover:shadow-md transition-all duration-300"
-              variants={fadeInUp}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="mr-4">
-                <Image src="/salesforce.png" alt="SalesForce" width={64} height={64} />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-2">SalesForce</h3>
-                <p className="text-gray-600">
-                  Cardano monero stacks celo livepeer stellar kusama elrond stellar. Nexo livepeer bitcoin terraUSD elrond horizen ethereum stacks.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* X (Twitter) */}
-            <motion.div
-              className="flex bg-white p-4 rounded-lg hover:shadow-md transition-all duration-300"
-              variants={fadeInUp}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="mr-4">
-                <Image src="/twitter.png" alt="X (Twitter)" width={64} height={64} />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-2">X (Twitter)</h3>
-                <p className="text-gray-600">
-                  Audius golem polygon livepeer crypto ankr. Chainlink polygon aave bancor elrond digibyte secret maker USD. ECash crypto.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* HubSpot */}
-            <motion.div
-              className="flex bg-white p-4 rounded-lg hover:shadow-md transition-all duration-300"
-              variants={fadeInUp}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="mr-4">
-                <Image src="/hubspot.png" alt="HubSpot" width={64} height={64} />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-2">HubSpot</h3>
-                <p className="text-gray-600">
-                  PancakeSwap stellar dogecoin horizen celo solana. Serum digibyte THETA litecoin hedera dai filecoin shiba-inu. Velas velas klaytn EOS.
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Instagram */}
-            <motion.div
-              className="flex bg-white p-4 rounded-lg hover:shadow-md transition-all duration-300"
-              variants={fadeInUp}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            >
-              <div className="mr-4">
-                <Image src="/instagram.png" alt="Instagram" width={64} height={64} />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Instagram</h3>
-                <p className="text-gray-600">
-                  Kava maker XRP elrond fantom velas ipsum litecoin. Helium helium bancor USD algorand EOS BitTorrent ipsum vechain. Kadena stellar.
-                </p>
-              </div>
-            </motion.div>
+            <Image src="/linkedin.png" alt="LinkedIn" width={24} height={24} className="rounded-full" />
+            <div className="flex flex-col">
+              <span className="text-xs text-white font-medium">Profile View From Your ICP</span>
+              <span className="text-xs text-white/60">9 minutes ago</span>
+            </div>
           </motion.div>
-        </div>
+        </motion.div>
+
+        <motion.div
+          className="absolute bottom-36 right-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          whileHover={{ scale: 1.05 }}
+        >
+          <motion.div
+            className="flex items-center space-x-2 bg-black/60 shadow-md px-3 py-2 rounded-full"
+            animate={{
+              y: [0, -12, 0],
+              transition: {
+                duration: 2.5,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }
+            }}
+          >
+            <Image src="/linkedin.png" alt="LinkedIn" width={24} height={24} className="rounded-full" />
+            <div className="flex flex-col">
+              <span className="text-xs text-white font-medium">Send A Request To This ICP</span>
+              <span className="text-xs text-white/60">2 minutes ago</span>
+            </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Built For Section */}
-      <section className="py-16">
+      <section className="py-16 relative">
         <div className="container mx-auto px-4">
           <motion.h2
-            className="text-3xl font-bold mb-8"
+            className="text-3xl font-bold mb-12"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.2 }}
             variants={fadeInUp}
           >
-            DM Deals is built for:
+            DM Demand is built for:
           </motion.h2>
 
           <motion.div
@@ -219,288 +197,256 @@ export default function LandingPage() {
             whileInView="visible"
             viewport={{ once: false, amount: 0.1 }}
           >
-            {/* Sales */}
+            {/* B2B Sales */}
             <motion.div
-              className="border rounded-lg p-6 hover:shadow-lg transition-all duration-300"
+              className="border border-gray-300 rounded-[24px] p-6 hover:shadow-lg transition-all duration-300"
               variants={fadeInUp}
               whileHover={{ y: -10, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
             >
-              <motion.div
-                className="flex justify-center items-center w-16 h-16 bg-white mb-4"
-                whileHover={{ rotate: 180 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Icon icon="ion:magnet-outline" width="64" className="transform rotate-180" />
-              </motion.div>
-              <h3 className="text-xl font-semibold mb-2">Sales</h3>
-              <p className="text-gray-600">
-                Stellar arweave ipsum harmony ipsum livepeer stellar celo fantom. Klaytn digibyte avalanche celsius IOTA.
+              <div className="flex justify-center items-center mb-6">
+                <Icon icon="ion:magnet-outline" width="48" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-center">B2B Sales</h3>
+              <p className="text-gray-600 text-center">
+                In 2025 Cold DMs > Cold Email. Post consistently and profit from social selling.
               </p>
             </motion.div>
 
             {/* Recruiters */}
             <motion.div
-              className="border rounded-lg p-6 hover:shadow-lg transition-all duration-300"
+              className="border border-gray-300 rounded-[24px] p-6 hover:shadow-lg transition-all duration-300"
               variants={fadeInUp}
               whileHover={{ y: -10, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
             >
-              <motion.div
-                className="flex justify-center items-center w-16 h-16 bg-white mb-4"
-                whileHover={{ scale: 1.2 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Icon icon="ion:binoculars-outline" width="64" />
-              </motion.div>
-              <h3 className="text-xl font-semibold mb-2">Recruiters</h3>
-              <p className="text-gray-600">
-                Secret terra ipsum horizen XRP revain USD serum chainlink.
+              <div className="flex justify-center items-center mb-6">
+                <Icon icon="ion:binoculars-outline" width="48" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-center">Recruiters</h3>
+              <p className="text-gray-600 text-center">
+                Prioritize high-potential candidates and spark conversations with top talent. Save time and boost hiring efficiency.
               </p>
             </motion.div>
 
-            {/* CEOs */}
+            {/* Investors */}
             <motion.div
-              className="border rounded-lg p-6 hover:shadow-lg transition-all duration-300"
+              className="border border-gray-300 rounded-[24px] p-6 hover:shadow-lg transition-all duration-300"
               variants={fadeInUp}
               whileHover={{ y: -10, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
             >
-              <motion.div
-                className="flex justify-center items-center w-16 h-16 bg-white mb-4"
-                whileHover={{ y: -8 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Icon icon="ion:rocket-outline" width="64" />
-              </motion.div>
-              <h3 className="text-xl font-semibold mb-2">CEOs</h3>
-              <p className="text-gray-600">
-                Loopring secret holo binance polkadot decentraland galafantom kava cardano.
+              <div className="flex justify-center items-center mb-6">
+                <Icon icon="ion:rocket-outline" width="48" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-center">Investors</h3>
+              <p className="text-gray-600 text-center">
+                Prioritize messages from promising founders and startups. New chats to start based on your investment focus.
               </p>
             </motion.div>
 
             {/* Freelancers */}
             <motion.div
-              className="border rounded-lg p-6 hover:shadow-lg transition-all duration-300"
+              className="border border-gray-300 rounded-[24px] p-6 hover:shadow-lg transition-all duration-300"
               variants={fadeInUp}
               whileHover={{ y: -10, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
             >
-              <motion.div
-                className="flex justify-center items-center w-16 h-16 bg-white mb-4"
-                whileHover={{ rotate: [0, 10, -10, 10, 0] }}
-                transition={{ duration: 1 }}
-              >
-                <Icon icon="ion:color-palette-outline" width="64" />
-              </motion.div>
-              <h3 className="text-xl font-semibold mb-2">Freelancers</h3>
-              <p className="text-gray-600">
-                Monero filecoin dogecoin eCash shiba-inu velas golem WAX kusama. Litecoin shiba-inu aave terra revain ipsum.
+              <div className="flex justify-center items-center mb-6">
+                <Icon icon="ion:color-palette-outline" width="48" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-center">Freelancers</h3>
+              <p className="text-gray-600 text-center">
+                We sort your messages and flag potential clients. Turn conversations into contracts.
               </p>
+            </motion.div>
+          </motion.div>
+
+          <div className="flex justify-center mt-12 space-x-6">
+            <Link
+              href="/signup"
+              className="bg-black text-white px-6 py-3 rounded-md hover:bg-gray-800 inline-flex items-center transition-all duration-300 ease-in-out"
+            >
+              <Icon icon="ion:flash-outline" className="mr-2" />
+              Get Started For Free
+            </Link>
+            <Link
+              href="#demo"
+              className="border border-gray-300 px-6 py-3 rounded-md hover:bg-gray-50 inline-flex items-center transition-all duration-300 ease-in-out"
+            >
+              <Icon icon="ion:play-circle-outline" className="mr-2" />
+              Watch Demo Video
+            </Link>
+          </div>
+
+          <motion.div
+            className="absolute -left-16 bottom-20"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 1 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <motion.div
+              className="flex items-center space-x-2 bg-black/60 shadow-md px-3 py-2 rounded-full"
+              animate={{
+                y: [0, -8, 0],
+                transition: {
+                  duration: 3.2,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }
+              }}
+            >
+              <Image src="/linkedin.png" alt="LinkedIn" width={24} height={24} className="rounded-full" />
+              <div className="flex flex-col">
+                <span className="text-xs text-white font-medium">Send A Message To This ICP</span>
+                <span className="text-xs text-white/60">3 minutes ago</span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="absolute right-8 bottom-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.8, duration: 1 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <motion.div
+              className="flex items-center space-x-2 bg-black/60 shadow-md px-3 py-2 rounded-full"
+              animate={{
+                y: [0, -15, 0],
+                transition: {
+                  duration: 3.8,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }
+              }}
+            >
+              <Image src="/linkedin.png" alt="LinkedIn" width={24} height={24} className="rounded-full" />
+              <div className="flex flex-col">
+                <span className="text-xs text-white font-medium">New Like From Your ICP</span>
+                <span className="text-xs text-white/60">just now</span>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            className="absolute right-4 top-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <motion.div
+              className="flex items-center space-x-2 bg-black/60 shadow-md px-3 py-2 rounded-full"
+              animate={{
+                y: [0, -10, 0],
+                transition: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }
+              }}
+            >
+              <Image src="/linkedin.png" alt="LinkedIn" width={24} height={24} className="rounded-full" />
+              <div className="flex flex-col">
+                <span className="text-xs text-white font-medium">New Comment From Your ICP</span>
+                <span className="text-xs text-white/60">5 minutes ago</span>
+              </div>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 bg-gray-50">
+      {/* Integrations Section */}
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <motion.h2
-            className="text-3xl font-bold text-center mb-12"
+            className="text-3xl font-bold mb-8"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.2 }}
             variants={fadeInUp}
           >
-            Pricing Plans
+            DM Demand currently integrates with LinkedIn. What integration should we build next?
           </motion.h2>
 
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-2 justify-center gap-8 max-w-4xl mx-auto"
-            variants={staggerChildren}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, amount: 0.1 }}
-          >
-            {/* Starter Plan */}
-            <motion.div
-              className="border rounded-lg p-6 bg-white hover:shadow-xl transition-all duration-500"
-              variants={fadeInUp}
-              whileHover={{ scale: 1.03 }}
-            >
-              <div className="mb-4">
-                <Icon icon="ion:battery-charging-outline" width="64" />
-                          </div>
-      <h3 className="text-2xl font-bold mb-1">Starter plan</h3>
-              <p className="text-blue-600 font-medium mb-8">Free Forever</p>
-
-              <motion.div
-                className="space-y-4 mb-20"
-                variants={staggerChildren}
-              >
-                <motion.div
-                  className="flex items-start"
-                  variants={fadeInUp}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Icon icon="ion:checkmark-circle-outline" className="text-gray-500" />
-                  </div>
-                  <p className="ml-3 text-gray-600">All Target profiles, Open and Closed conversations core functionality</p>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-start"
-                  variants={fadeInUp}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Icon icon="ion:checkmark-circle-outline" className="text-gray-500" />
-                  </div>
-                  <p className="ml-3 text-gray-600">In-app AI and live chat support</p>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-start"
-                  variants={fadeInUp}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Icon icon="ion:checkmark-circle-outline" className="text-gray-500" />
-                  </div>
-                  <p className="ml-3 text-gray-600">Access to knowledge base and all educational materials</p>
-                </motion.div>
-              </motion.div>
-
-              <motion.button
-                className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-              >
-                Try starter plan for free
-              </motion.button>
-            </motion.div>
-
-            {/* Professional Plan */}
-            <motion.div
-              className="border rounded-lg p-6 bg-white hover:shadow-xl transition-all duration-500"
-              variants={fadeInUp}
-              whileHover={{ scale: 1.03 }}
-            >
-              <div className="mb-4">
-                <Icon icon="ion:battery-charging-outline" width="64" />
-              </div>
-              <h3 className="text-2xl font-bold mb-1">Professional plan</h3>
-              <p className="text-blue-600 font-medium mb-8">$49 per month</p>
-
-              <motion.div
-                className="space-y-4 mb-10"
-                variants={staggerChildren}
-              >
-                <motion.div
-                  className="flex items-start"
-                  variants={fadeInUp}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Icon icon="ion:checkmark-circle-outline" className="text-gray-500" />
-                  </div>
-                  <p className="ml-3 text-gray-600">Everything from Starter plan</p>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-start"
-                  variants={fadeInUp}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Icon icon="ion:checkmark-circle-outline" className="text-gray-500" />
-                  </div>
-                  <p className="ml-3 text-gray-600">Push rich DM conversation data automatically to your CRM</p>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-start"
-                  variants={fadeInUp}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Icon icon="ion:checkmark-circle-outline" className="text-gray-500" />
-                  </div>
-                  <p className="ml-3 text-gray-600">Prioritized in-app AI and live chat support</p>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-start"
-                  variants={fadeInUp}
-                  whileHover={{ x: 5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <div className="flex-shrink-0 mt-1">
-                    <Icon icon="ion:checkmark-circle-outline" className="text-gray-500" />
-                  </div>
-                  <p className="ml-3 text-gray-600">Access to new features early (ability to become a beta tester)</p>
-                </motion.div>
-              </motion.div>
-
-              <motion.button
-                className="w-full bg-black text-white py-3 rounded-md hover:bg-gray-800"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ duration: 0.2 }}
-              >
-                Select professional plan
-              </motion.button>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="text-center mt-12"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-          >
-            <p className="text-gray-600 mb-2">Know a lot of sellers and those building personal brands?</p>
-            <motion.a
-              href="#"
-              className="font-medium underline"
-              whileHover={{ scale: 1.05, color: "#3182CE" }}
-              transition={{ duration: 0.2 }}
-            >
-              Join our affiliate program in 30 seconds
-            </motion.a>
-          </motion.div>
+          <div className="flex justify-start mb-6">
+            <button className="flex items-center px-4 py-2 border rounded-md text-gray-600 hover:bg-gray-100 transition-all duration-300">
+              <Icon icon="ion:add-circle-outline" className="mr-2" />
+              Suggest A New Integration
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 border-t">
+      {/* FAQ Section */}
+      <section className="py-16">
         <div className="container mx-auto px-4">
-          <motion.div
-            className="flex flex-col md:flex-row justify-between items-center"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.8 }}
-          >
-            <motion.div
-              className="flex items-center space-x-2 mb-4 md:mb-0"
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Icon icon="ion:file-tray-full-outline" width="20" />
-              <span className="font-bold">DM Deals</span>
-            </motion.div>
-            <div className="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} DM Deals. All rights reserved.
+          <div className="flex items-start max-w-4xl mx-auto">
+            <div className="w-1/4 pr-8 -mt-16">
+              <Image
+                src="/faq.png"
+                alt="FAQ illustration"
+                width={200}
+                height={200}
+                className="max-w-full h-auto"
+              />
             </div>
-          </motion.div>
+            <div className="w-3/4">
+              <motion.h2
+                className="text-4xl font-bold mb-12"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.2 }}
+                variants={fadeInUp}
+              >
+                Frequently Asked Questions
+              </motion.h2>
+
+              <motion.div
+                className="space-y-4"
+                variants={staggerChildren}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.1 }}
+              >
+                {faqItems.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="border-b"
+                    variants={fadeInUp}
+                  >
+                    <button
+                      className={`flex justify-between items-center w-full py-4 text-left font-medium ${activeQuestion === index ? 'text-blue-500' : ''}`}
+                      onClick={() => toggleQuestion(index)}
+                    >
+                      <span>{item.question}</span>
+                      <Icon
+                        icon="bi:plus"
+                        width="24" // Bigger icon
+                        height="24"
+                        className={`${activeQuestion === index ? 'text-red-500' : 'text-blue-500'} transition-transform duration-300 ${activeQuestion === index ? 'transform rotate-45' : ''}`}
+                      />
+                    </button>
+                    <motion.div
+                      className="overflow-hidden"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{
+                        height: activeQuestion === index ? 'auto' : 0,
+                        opacity: activeQuestion === index ? 1 : 0
+                      }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                      <div className="pb-4 text-gray-600">
+                        {item.answer}
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
         </div>
-      </footer>
+      </section>
+
     </div>
   );
 }
