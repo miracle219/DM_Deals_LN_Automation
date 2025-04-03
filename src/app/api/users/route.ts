@@ -5,7 +5,7 @@ import { users, teamInvites } from '@/lib/db/schema';
 import { createId } from '@paralleldrive/cuid2';
 import { desc } from 'drizzle-orm';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from "@/lib/auth-config";
 
 // Fetch all users (admin only)
 export async function GET() {

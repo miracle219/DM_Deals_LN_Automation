@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 import { CustomerSidebar } from '@/components/layout/customer-sidebar';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from "@/lib/auth-config";
 
 export default async function DashboardLayout({
   children,

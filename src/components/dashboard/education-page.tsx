@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect, ReactNode } from 'react';
-import { Icon } from '@iconify/react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
 type Course = {
   id: string;

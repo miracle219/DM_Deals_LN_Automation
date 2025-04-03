@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../api/auth/[...nextauth]/route';
+import { authOptions } from "@/lib/auth-config";
 import { AdminSidebar } from '@/components/layout/admin-sidebar';
 
 export default async function AdminDashboardLayout({

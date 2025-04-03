@@ -1,6 +1,5 @@
 "use client";
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from 'react';

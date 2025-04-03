@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 export default function LandingPage() {
@@ -40,18 +40,10 @@ export default function LandingPage() {
     }
   };
 
-  const floatAnimation = {
-    y: [0, -10, 0],
-    transition: {
-      duration: 3,
-      repeat: Infinity,
-      repeatType: "reverse"
-    }
-  };
 
-  const toggleQuestion = (index) => {
+  const toggleQuestion = (index: SetStateAction<number>) => {
     if (activeQuestion === index) {
-      setActiveQuestion(null);
+      setActiveQuestion(0);
     } else {
       setActiveQuestion(index);
     }
@@ -140,7 +132,12 @@ export default function LandingPage() {
         >
           <motion.div
             className="flex items-center space-x-2 bg-black/60 shadow-md px-3 py-2 rounded-full"
-            animate={floatAnimation}
+            animate={{ y: [0, -10, 0] }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatType: "reverse"
+            }}
           >
             <Image src="/linkedin.png" alt="LinkedIn" width={24} height={24} className="rounded-full" />
             <div className="flex flex-col">
@@ -208,7 +205,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-2 text-center">B2B Sales</h3>
               <p className="text-gray-600 text-center">
-                In 2025 Cold DMs > Cold Email. Post consistently and profit from social selling.
+                In 2025 Cold DMs &gt; Cold Email. Post consistently and profit from social selling.
               </p>
             </motion.div>
 
