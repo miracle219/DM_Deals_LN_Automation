@@ -229,7 +229,7 @@ export default function OnboardingPage() {
               />
             </div>
             <div className="w-1/2 bg-white p-8 rounded-r-lg">
-              <h2 className="text-2xl font-bold mb-6">What's your role?</h2>
+              <h2 className="text-2xl font-bold mb-6">What&apos;s your role?</h2>
               <FormField
                 control={form.control}
                 name="role"
@@ -283,7 +283,7 @@ export default function OnboardingPage() {
             transition={transition}
           >
             <div className="w-1/2 bg-gray-900 text-white p-8 flex flex-col justify-center rounded-l-lg">
-              <h3 className="text-2xl font-bold mb-4">We're curious</h3>
+              <h3 className="text-2xl font-bold mb-4">We&apos;re curious</h3>
               <p className="text-gray-300">
                 Knowing how you found us helps us better understand our audience and improve our outreach.
               </p>

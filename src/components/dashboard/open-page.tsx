@@ -2,14 +2,9 @@
 
 import { useState, useEffect, ReactNode } from 'react';
 import { Icon } from '@iconify/react';
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DataTable } from "@/components/layout/data-table";
 
-type ConversationInteraction = {
-  name: string;
-  date: string;
-};
 
 type Conversation = {
   id: string;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, ReactNode } from 'react';
-import { Icon } from '@iconify/react';
 import {
   Table,
   TableBody,
@@ -34,7 +33,6 @@ export function DataTable<T extends { id: string }>({
   totalCount,
   actions = [],
   enableSelection = true,
-  enableHover = true,
   className = '',
 }: DataTableProps<T>) {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
